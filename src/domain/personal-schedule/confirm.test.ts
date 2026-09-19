@@ -91,5 +91,8 @@ describe("confirmScheduleDraft", () => {
     expect(handoff.schema).toBe("mosaik.atlas-handoff.v1");
     expect(handoff.payload.lessons[0]).not.toHaveProperty("category");
     expect(handoff.payload.lessons[0]).not.toHaveProperty("workTime");
+    expect(handoff.payload).not.toHaveProperty("owner");
+    expect(handoff.payload).not.toHaveProperty("source");
+    expect(handoff.payload.confirmedAt).toBe("2026-09-19T09:00:00.000Z");
   });
 });

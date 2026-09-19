@@ -7,8 +7,10 @@ ATLAS übergeben** für den persönlichen Wochenstundenplan einer einzelnen Lehr
 
 - Verwende die Typen und Funktionen aus `src/domain/personal-schedule`; erfinde
   kein paralleles UI-Datenmodell.
-- Die Quelle ist genau ein Bild oder PDF. Vor dem Upload werden Typ und eine
-  angemessene Dateigröße geprüft.
+- Verwende für Dateien und eingefügten Text ausschließlich die Funktionen aus
+  `src/domain/extraction`; keine zweite Parser- oder PDF-Logik in Komponenten.
+- Quellen sind Bild, PDF, Text, CSV/TSV, kopierte Tabelle oder manuelle Eingabe.
+  Vor der lokalen Verarbeitung werden Typ und Dateigröße geprüft.
 - Das Extraktionsergebnis ist immer ein Draft. Niemals direkt an ATLAS senden.
 - Fehlende erkannte Pflichtangaben bleiben im Draft als `null` editierbar; sie
   dürfen nicht durch erfundene Werte ersetzt oder vor der Prüfansicht verworfen werden.
@@ -26,7 +28,8 @@ ATLAS übergeben** für den persönlichen Wochenstundenplan einer einzelnen Lehr
 
 Die Hauptnavigation für V1 besteht nur aus drei nachvollziehbaren Zuständen:
 
-1. **Importieren** – Foto aufnehmen, Bild oder PDF auswählen.
+1. **Importieren** – Foto aufnehmen, Datei auswählen, Tabelle/Text einfügen oder
+   leer manuell beginnen.
 2. **Prüfen** – erkannte Woche korrigieren; Quelle ein- und ausblenden.
 3. **Übergeben** – Zusammenfassung und eindeutige Aktion „An ATLAS übergeben“.
 
@@ -38,3 +41,4 @@ Desktop und Tablet können das Wochenraster verwenden.
 
 Benutzerverwaltung, allgemeines Dashboard, Dokumentenarchiv, KOMPASS-Anbindung,
 Schulmodell, Vertretungsplan, Stapelverarbeitung oder automatische Synchronisation.
+Keine externe OCR und keine Übertragung von Bild, PDF oder erkanntem Text.
