@@ -111,7 +111,13 @@ export const atlasHandoffSchema = z.object({
   schema: z.literal(ATLAS_HANDOFF_SCHEMA),
   kind: z.literal("personal-schedule"),
   createdAt: z.string().datetime(),
-  payload: personalScheduleSchema,
+  payload: z.object({
+    scheduleId: z.string().uuid(),
+    confirmedAt: z.string().datetime(),
+    timezone: z.string().trim().min(1).default("Europe/Berlin"),
+    validity: personalScheduleSchema.shape.validity,
+    lessons: z.array(lessonSchema).min(1).max(200),
+  }),
 });
 
 export type Weekday = z.infer<typeof weekdaySchema>;

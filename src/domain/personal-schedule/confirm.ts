@@ -67,7 +67,13 @@ export function createAtlasHandoff(
     schema: ATLAS_HANDOFF_SCHEMA,
     kind: "personal-schedule",
     createdAt,
-    payload: input,
+    payload: {
+      scheduleId: input.scheduleId,
+      confirmedAt: input.exportedAt,
+      timezone: input.timezone,
+      validity: input.validity,
+      lessons: input.lessons,
+    },
   });
 }
 
