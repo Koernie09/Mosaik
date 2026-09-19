@@ -86,6 +86,27 @@ describe("MOSAIK-Stundenplanablauf", () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
+  it("importiert einen alten UNTIS-HTML-Wochenplan lokal", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const file = new File([[
+      "<b>gilt ab Montag; 5. November 2007</b>",
+      "<table><tr><td></td><td>Montag</td><td>Dienstag</td></tr>",
+      "<tr><td>1</td><td rowspan='2'>Deutsch<br>6D<br>B216</td><td></td></tr>",
+      "<tr><td>2</td><td>Geschichte<br>7A<br>A101</td></tr></table>",
+    ].join("")], "alter-plan.html", { type: "text/html" });
+
+    await user.upload(screen.getByLabelText("Stundenplandatei auswählen"), file);
+
+    expect(await screen.findByRole("heading", { name: "Stundenplan prüfen" })).toBeTruthy();
+    expect(screen.getByDisplayValue("Deutsch")).toBeTruthy();
+    expect(screen.getByDisplayValue("1–2")).toBeTruthy();
+    expect(screen.getByDisplayValue("6D")).toBeTruthy();
+    expect(screen.getByDisplayValue("B216")).toBeTruthy();
+    expect(screen.getByText(/Das Dokument enthält keine Uhrzeiten/)).toBeTruthy();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it("bietet nach der Bestätigung die Übergabedatei als Fallback an", async () => {
     const user = userEvent.setup();
     const click = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => undefined);

@@ -63,7 +63,7 @@ export function App() {
         : {
             kind: "text",
             fileName: file.name,
-            text: await file.text(),
+            text: result.sourceText ?? await file.text(),
           };
       beginReview(result.draft, result.warnings, nextPreview);
     } catch (error) {

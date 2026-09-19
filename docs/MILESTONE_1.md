@@ -8,8 +8,8 @@
 
 ## Der vollständige, bewusst kleine Weg
 
-1. **Importieren:** ein Bild oder PDF auswählen, Text/Tabelle einfügen oder
-   manuell mit einem leeren Plan beginnen.
+1. **Importieren:** ein Bild, PDF oder alten UNTIS-HTML-Export auswählen,
+   Text/Tabelle einfügen oder manuell mit einem leeren Plan beginnen.
 2. **Extrahieren:** daraus entsteht ein Entwurf; noch nichts gilt als verlässlich.
 3. **Prüfen:** Wochenraster und Quelle werden gemeinsam angezeigt. Jede Zelle ist
    änderbar, unsichere Felder sind markiert.

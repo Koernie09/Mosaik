@@ -43,13 +43,13 @@ export function ImportStep({ busy, onFile, onManual, onText }: Props) {
         <button className="import-card" type="button" disabled={busy} onClick={() => fileInput.current?.click()}>
           <span className="card-icon" aria-hidden="true">↑</span>
           <strong>Datei auswählen</strong>
-          <span>PDF, Bild, Text, CSV oder TSV</span>
+          <span>PDF, Bild, HTML, Text, CSV oder TSV</span>
         </button>
         <input
           ref={fileInput}
           className="visually-hidden"
           type="file"
-          accept="application/pdf,image/*,text/plain,text/csv,text/tab-separated-values,.pdf,.png,.jpg,.jpeg,.webp,.heic,.txt,.csv,.tsv"
+          accept="application/pdf,image/*,text/html,text/plain,text/csv,text/tab-separated-values,.pdf,.png,.jpg,.jpeg,.webp,.heic,.htm,.html,.txt,.csv,.tsv"
           disabled={busy}
           aria-label="Stundenplandatei auswählen"
           onChange={(event) => takeFile(event.target.files?.[0])}

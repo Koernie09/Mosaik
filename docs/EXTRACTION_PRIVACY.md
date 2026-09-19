@@ -18,6 +18,11 @@
 ## Im technischen Kern umgesetzt
 
 - Text-, CSV-, TSV- und kopierte Tabelleneingaben werden lokal normalisiert.
+- Alte UNTIS-HTML-Dateien werden lokal als inaktives Dokument geparst. Skripte
+  werden nicht ausgeführt und verknüpfte Stylesheets oder andere Ressourcen
+  nicht geladen. Auch Exporte mit ISO-8859-1-Zeichensatz werden unterstützt.
+  Tabellenverbünde und Fußnoten liefern Wochentag, Stundennummer, Fach,
+  Lerngruppe und Raum. Nicht enthaltene Uhrzeiten werden nicht erfunden.
 - PDFs mit Textebene werden mit `pdfjs-dist` vollständig im Browser gelesen;
   Dateigröße (15 MB) und Seitenzahl (20) sind begrenzt.
 - UNTIS-Unterrichtsverteilungen werden als Teilinformation erkannt: Fach,

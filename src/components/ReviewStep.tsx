@@ -126,7 +126,7 @@ export function ReviewStep({ draft, issues, preview, warnings, onBack, onChange,
           <Field label="Raum" lesson={lesson} field="room" onChange={updateLesson} />
         </div>
         {needsPlacement && lesson.subject ? (
-          <p className="placement-note">Aus einer Unterrichtsverteilung übernommen: Bitte Wochentag, Beginn und Ende ergänzen.</p>
+          <p className="placement-note">Aus der Quelle übernommen: Bitte fehlenden Wochentag sowie Beginn und Ende ergänzen.</p>
         ) : null}
         {relevantIssues.map((issue) => <p className="field-error" key={`${issue.code}-${issue.message}`}>{issue.message}</p>)}
       </article>

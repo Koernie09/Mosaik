@@ -1,6 +1,7 @@
 import { PERSONAL_SCHEDULE_DRAFT_SCHEMA, type PersonalScheduleDraft } from "../personal-schedule";
 import { emptyLesson, extractScheduleFromText } from "./text";
 import { extractScheduleFromPdf } from "./pdf";
+import { decodeHtmlFile, extractScheduleFromHtml } from "./html";
 import type { ExtractionResult } from "./types";
 
 const MAX_IMAGE_BYTES = 15 * 1024 * 1024;
@@ -9,6 +10,10 @@ export async function extractScheduleFromFile(file: File): Promise<ExtractionRes
   const type = file.type.toLowerCase();
   if (type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
     return extractScheduleFromPdf(file);
+  }
+  if (type === "text/html" || /\.html?$/i.test(file.name)) {
+    const html = await decodeHtmlFile(file);
+    return extractScheduleFromHtml(html, file.name);
   }
   if (type.startsWith("text/") || /\.(csv|tsv|txt)$/i.test(file.name)) {
     return extractScheduleFromText(await file.text(), {
@@ -38,5 +43,5 @@ export async function extractScheduleFromFile(file: File): Promise<ExtractionRes
       ignoredLines: 0,
     };
   }
-  throw new Error("Unterstützt werden PDF, Bild, Text, CSV und TSV.");
+  throw new Error("Unterstützt werden PDF, Bild, HTML, Text, CSV und TSV.");
 }
