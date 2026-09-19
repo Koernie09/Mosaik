@@ -1,0 +1,25 @@
+{
+  "schema": "mosaik.personal-schedule.v1",
+  "scheduleId": "8e913374-05fe-449c-853f-b562d941dcec",
+  "exportedAt": "2026-09-19T09:00:00.000Z",
+  "owner": { "displayName": "Beispiel-Lehrkraft" },
+  "validity": { "from": "2026-08-17", "to": "2027-01-31" },
+  "timezone": "Europe/Berlin",
+  "lessons": [
+    {
+      "id": "30083ac0-128a-44a0-a61d-76d9e03f3bbc",
+      "weekday": "MO",
+      "startTime": "08:00",
+      "endTime": "08:45",
+      "period": "1",
+      "subject": "Deutsch",
+      "classOrCourse": "7G2",
+      "room": "A123"
+    }
+  ],
+  "source": {
+    "type": "image",
+    "fileName": "stundenplan.jpg",
+    "importedAt": "2026-09-19T08:00:00.000Z"
+  }
+}
