@@ -3,3 +3,4 @@ export * from "./text";
 export * from "./pdf";
 export * from "./source";
 export * from "./html";
+export * from "./webuntis-image";

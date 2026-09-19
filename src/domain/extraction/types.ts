@@ -9,7 +9,9 @@ export type ExtractionWarning = {
     | "TOO_MANY_PAGES"
     | "TEACHING_ASSIGNMENT_WITHOUT_TIMES"
     | "HTML_PERIOD_TIMES_MISSING"
-    | "HTML_NO_TIMETABLE";
+    | "HTML_NO_TIMETABLE"
+    | "WEBUNTIS_SCREENSHOT_RECOGNIZED"
+    | "WEBUNTIS_UNCLEAR_ENTRIES";
   message: string;
   line?: number;
 };

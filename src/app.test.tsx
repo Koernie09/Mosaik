@@ -79,9 +79,9 @@ describe("MOSAIK-Stundenplanablauf", () => {
     render(<App />);
     const file = new File(["image"], "plan.jpg", { type: "image/jpeg" });
 
-    await user.upload(screen.getByLabelText(/Foto aufnehmen/), file);
+    await user.upload(screen.getByLabelText(/Foto oder Screenshot/), file);
 
-    expect(await screen.findByText(/automatische Fotoerkennung ist noch nicht freigegeben/i)).toBeTruthy();
+    expect(await screen.findByText(/nicht als unterstützter WebUntis-Screenshot erkannt/i)).toBeTruthy();
     expect(screen.getByAltText("Originalquelle plan.jpg")).toBeTruthy();
     expect(fetch).not.toHaveBeenCalled();
   });

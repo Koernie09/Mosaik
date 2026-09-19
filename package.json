@@ -4,16 +4,19 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "prepare:ocr": "node scripts/copy-ocr-assets.mjs",
+    "dev": "npm run prepare:ocr && vite",
+    "build": "npm run prepare:ocr && tsc -b && vite build",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@tesseract.js-data/eng": "1.0.0",
     "@vitejs/plugin-react": "latest",
     "pdfjs-dist": "^5.4.149",
     "react": "latest",
     "react-dom": "latest",
+    "tesseract.js": "7.0.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

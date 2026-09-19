@@ -164,7 +164,7 @@ export function App() {
 
       {status ? <p className="global-status" role="status">{status}</p> : null}
       <footer>
-        Fotos, PDFs und eingefügter Text verlassen MOSAIK nicht. ATLAS erhält ausschließlich bestätigte Stundenplan-Tatsachen.
+        Fotos, Screenshots, PDFs und eingefügter Text verlassen MOSAIK nicht. ATLAS erhält ausschließlich bestätigte Stundenplan-Tatsachen.
       </footer>
     </main>
   );

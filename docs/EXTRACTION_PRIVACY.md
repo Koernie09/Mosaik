@@ -29,11 +29,26 @@
   Lerngruppe und Wochenstundenzahl erzeugen unplatzierte Unterrichtsstunden.
   Wochentag und Uhrzeit werden niemals erfunden, sondern müssen vor der
   Bestätigung aus einem Wochenplan ergänzt werden.
-- Bilddateien werden weder hochgeladen noch automatisch analysiert. Sie öffnen
-  einen manuellen Entwurf mit einem klaren Hinweis.
-- Für lokale OCR existiert bewusst noch keine Implementierung. Vor der Auswahl
-  einer OCR-Bibliothek werden Modellbezug, Paketgröße, Geräteperformance und
-  Barrierefreiheit geprüft. Eine externe OCR bleibt gesperrt.
+- WebUntis-Screenshots werden mit lokal ausgeliefertem Tesseract.js 7 und dem
+  englischen Tesseract-Sprachmodell im Browser analysiert. Der Parser nutzt
+  zusätzlich die Lage der Karten im Wochen- und Zeitraster. Andere Bildtypen
+  öffnen weiterhin einen manuellen Entwurf mit einem klaren Hinweis.
+
+### Lokale OCR: dokumentierter Datenfluss
+
+| Punkt | Festlegung |
+| --- | --- |
+| Anbieter / Software | Open-Source-Bibliothek Tesseract.js 7 (Naptha) mit Tesseract-Sprachmodell; Apache-2.0-Lizenz |
+| Datenfluss | Bilddatei → Canvas im Browser → lokaler WebWorker/WebAssembly → OCR-Wörter und Koordinaten → MOSAIK-Entwurf |
+| Externe Übertragung | Keine. Bild, OCR-Text und Entwurf werden an keinen OCR-, KI- oder WebUntis-Dienst gesendet. |
+| Serverstandort | Keine serverseitige Bildverarbeitung. Worker, WebAssembly und Sprachmodell werden als statische Dateien vom selben Ursprung wie MOSAIK geladen. |
+| Speicherdauer | Bild und OCR-Ergebnis nur im Arbeitsspeicher des geöffneten Tabs; die Vorschau-URL wird beim Verlassen freigegeben. Tesseract kann ausschließlich das unveränderliche Sprachmodell lokal zwischenspeichern. |
+| Modelltraining | Kein Training und keine Weitergabe von Eingaben. |
+| Datenminimierung | Es wird nur der ausgewählte Screenshot verarbeitet; an ATLAS gehen erst nach Prüfung nur bestätigte Unterrichtsdaten. |
+
+Die lokalen OCR-Dateien werden beim Build aus fest versionierten npm-Paketen in
+MOSAIK übernommen. Die Laufzeitkonfiguration verweist ausdrücklich auf diese
+same-origin-Dateien und nicht auf die Standard-CDNs von Tesseract.js.
 
 ## Externe Erkennung: Freigabesperre
 
@@ -53,6 +68,6 @@ den Projekteigner ausdrücklich freigegeben werden:
 | Datenminimierung | Zuschnitt/Schwärzung, Metadatenentfernung, Pseudonymisierung |
 
 Bis dahin gilt: Fotos und Scans können ausgewählt und lokal angezeigt werden,
-werden aber nicht extern übertragen. Als nächste technische Option ist lokale
-OCR im Browser zu evaluieren. Dabei muss auch der Bezug des OCR-Modells sauber
-dokumentiert werden; die Bilddaten selbst dürfen den Browser nicht verlassen.
+werden aber nicht extern übertragen. Die lokale Erkennung bleibt vorerst auf
+WebUntis-Screenshots begrenzt; freie Fotos und Scans führen zur manuellen
+Erfassung. Die Bilddaten dürfen den Browser nicht verlassen.

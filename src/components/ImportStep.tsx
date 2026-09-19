@@ -35,9 +35,9 @@ export function ImportStep({ busy, onFile, onManual, onText }: Props) {
       <div className="import-grid">
         <label className="import-card primary-card">
           <span className="card-icon" aria-hidden="true">⌁</span>
-          <strong>Foto aufnehmen</strong>
-          <span>Mit Kamera oder Fotomediathek</span>
-          <input type="file" accept="image/*" capture="environment" disabled={busy} onChange={(event) => takeFile(event.target.files?.[0])} />
+          <strong>Foto oder Screenshot</strong>
+          <span>WebUntis-Screenshots lokal erkennen</span>
+          <input type="file" accept="image/*" disabled={busy} onChange={(event) => takeFile(event.target.files?.[0])} />
         </label>
 
         <button className="import-card" type="button" disabled={busy} onClick={() => fileInput.current?.click()}>
@@ -81,7 +81,7 @@ export function ImportStep({ busy, onFile, onManual, onText }: Props) {
 
       <aside className="privacy-note">
         <strong>Deine Daten bleiben hier.</strong>
-        <span>Es wird nichts hochgeladen. PDFs und Texte werden lokal im Browser gelesen.</span>
+        <span>Es wird nichts hochgeladen. WebUntis-Screenshots, PDFs und Texte werden lokal im Browser gelesen.</span>
       </aside>
     </section>
   );

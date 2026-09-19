@@ -2,6 +2,7 @@ import { PERSONAL_SCHEDULE_DRAFT_SCHEMA, type PersonalScheduleDraft } from "../p
 import { emptyLesson, extractScheduleFromText } from "./text";
 import { extractScheduleFromPdf } from "./pdf";
 import { decodeHtmlFile, extractScheduleFromHtml } from "./html";
+import { extractWebUntisScreenshot } from "./webuntis-image";
 import type { ExtractionResult } from "./types";
 
 const MAX_IMAGE_BYTES = 15 * 1024 * 1024;
@@ -23,6 +24,8 @@ export async function extractScheduleFromFile(file: File): Promise<ExtractionRes
   }
   if (type.startsWith("image/") || /\.(png|jpe?g|webp|heic)$/i.test(file.name)) {
     if (file.size > MAX_IMAGE_BYTES) throw new Error("Das Bild darf höchstens 15 MB groß sein.");
+    const webUntis = await extractWebUntisScreenshot(file);
+    if (webUntis) return webUntis;
     const now = new Date().toISOString();
     const draft: PersonalScheduleDraft = {
       schema: PERSONAL_SCHEDULE_DRAFT_SCHEMA,
@@ -37,7 +40,7 @@ export async function extractScheduleFromFile(file: File): Promise<ExtractionRes
       draft,
       warnings: [{
         code: "IMAGE_OCR_NOT_AVAILABLE",
-        message: "Die automatische Fotoerkennung ist noch nicht freigegeben. Das Bild bleibt auf diesem Gerät. Bitte übertrage die Stunden vorerst manuell.",
+        message: "Dieses Bild wurde nicht als unterstützter WebUntis-Screenshot erkannt. Es bleibt auf diesem Gerät. Bitte übertrage die Stunden vorerst manuell.",
       }],
       recognizedLines: 0,
       ignoredLines: 0,
