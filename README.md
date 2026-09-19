@@ -15,13 +15,15 @@ nach gesonderter technischer Prüfung ergänzt.
 
 ## Technischer Stand
 
-Dieses Repository enthält das Lovable-kompatible React-/TypeScript-Grundgerüst und
-den verbindlichen Domänenkern für:
+Dieses Repository enthält die React-/TypeScript-Anwendung und den verbindlichen
+Domänenkern für:
 
 `Quelle → Extraktionsentwurf → Prüfung → bestätigter Stundenplan → ATLAS-Übergabe`
 
-Die Startoberfläche ist nur ein Platzhalter. Der nächste Umsetzungsschritt ist die
-in [`docs/LOVABLE_BRIEF.md`](docs/LOVABLE_BRIEF.md) beschriebene Benutzerführung.
+Die Oberfläche führt durch Import, lokale Auswertung, mobile bzw. desktopgerechte
+Prüfung und die bestätigte Übergabe an ATLAS. Foto- und Scanquellen bleiben lokal;
+solange keine ausdrücklich freigegebene lokale Erkennung vorliegt, führt MOSAIK
+ehrlich zur manuellen Erfassung.
 
 ## Lokal starten
 

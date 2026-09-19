@@ -32,7 +32,7 @@ export async function extractScheduleFromFile(file: File): Promise<ExtractionRes
       draft,
       warnings: [{
         code: "IMAGE_OCR_NOT_AVAILABLE",
-        message: "Das Bild bleibt auf diesem Gerät. Lokale Bilderkennung ist noch nicht angeschlossen; bitte die Stunden in der Prüfansicht ergänzen.",
+        message: "Die automatische Fotoerkennung ist noch nicht freigegeben. Das Bild bleibt auf diesem Gerät. Bitte übertrage die Stunden vorerst manuell.",
       }],
       recognizedLines: 0,
       ignoredLines: 0,
@@ -40,4 +40,3 @@ export async function extractScheduleFromFile(file: File): Promise<ExtractionRes
   }
   throw new Error("Unterstützt werden PDF, Bild, Text, CSV und TSV.");
 }
-

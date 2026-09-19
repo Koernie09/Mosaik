@@ -39,9 +39,8 @@ export async function extractScheduleFromPdf(file: File): Promise<ExtractionResu
   if (lines.length === 0) {
     result.warnings.push({
       code: "PDF_WITHOUT_TEXT",
-      message: "Diese PDF enthält keine lesbare Textebene. Bitte die lokale Bilderkennung oder die manuelle Eingabe verwenden.",
+      message: "Diese PDF enthält keine lesbare Textebene. Die automatische Bilderkennung ist noch nicht freigegeben; bitte die Stunden manuell ergänzen.",
     });
   }
   return result;
 }
-

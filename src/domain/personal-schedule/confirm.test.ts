@@ -79,7 +79,27 @@ describe("confirmScheduleDraft", () => {
       expect((error as ScheduleConfirmationError).issues[0]?.code).toBe(
         "INCOMPLETE_OR_INVALID_FIELD",
       );
+      expect((error as ScheduleConfirmationError).issues[0]?.lessonIds).toEqual([
+        draft.lessons[0].id,
+      ]);
     }
+  });
+
+  it("treats empty optional draft fields as omitted facts", () => {
+    const manual: PersonalScheduleDraft = {
+      ...draft,
+      lessons: [{
+        ...draft.lessons[0],
+        period: null,
+        classOrCourse: null,
+        room: null,
+      }],
+    };
+
+    const result = confirmScheduleDraft(manual);
+    expect(result.lessons[0]).not.toHaveProperty("period");
+    expect(result.lessons[0]).not.toHaveProperty("classOrCourse");
+    expect(result.lessons[0]).not.toHaveProperty("room");
   });
 
   it("creates a versioned ATLAS handoff without ATLAS work-time rules", () => {

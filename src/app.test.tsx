@@ -1,0 +1,97 @@
+// @vitest-environment jsdom
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { App } from "./app";
+
+describe("MOSAIK-Stundenplanablauf", () => {
+  beforeEach(() => {
+    vi.stubGlobal("crypto", { randomUUID: vi.fn(() => cryptoId()) });
+    vi.stubGlobal("fetch", vi.fn());
+    URL.createObjectURL = vi.fn(() => "blob:mosaik-test");
+    URL.revokeObjectURL = vi.fn();
+  });
+
+  afterEach(() => {
+    cleanup();
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
+
+  it("führt einen manuellen Entwurf erst nach vollständiger Prüfung zur Übergabe", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /Manuell beginnen/ }));
+    expect(screen.getByRole("heading", { name: "Stundenplan prüfen" })).toBeTruthy();
+
+    await user.click(screen.getByRole("button", { name: "Stundenplan bestätigen" }));
+    expect(screen.getByRole("status").textContent).toContain("korrigiere");
+
+    await user.selectOptions(screen.getByLabelText(/^Wochentag/), "MO");
+    fireEvent.change(screen.getByLabelText(/^Beginn/), { target: { value: "08:00" } });
+    fireEvent.change(screen.getByLabelText(/^Ende/), { target: { value: "08:45" } });
+    await user.type(screen.getByLabelText(/^Fach/), "Deutsch");
+    await user.type(screen.getByLabelText(/^Lerngruppe/), "7G2");
+
+    await user.click(screen.getByRole("button", { name: "Stundenplan bestätigen" }));
+    expect(screen.getByRole("heading", { name: "Bereit für ATLAS" })).toBeTruthy();
+    expect(screen.getByText("Montag, 08:00–08:45")).toBeTruthy();
+    expect(screen.getByText("Deutsch")).toBeTruthy();
+  });
+
+  it("übernimmt Text lokal, erlaubt Bearbeiten und Löschen", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.type(
+      screen.getByLabelText("Text oder kopierte Tabelle einfügen"),
+      "Montag; 08:00; 08:45; Deutsch; 7G2; R12{enter}Dienstag; 09:00; 09:45; Geschichte; 8A; R10",
+    );
+    await user.click(screen.getByRole("button", { name: "Text lokal auswerten" }));
+
+    const subjects = screen.getAllByLabelText(/^Fach/);
+    expect(subjects).toHaveLength(2);
+    await user.clear(subjects[0]);
+    await user.type(subjects[0], "Latein");
+    expect((subjects[0] as HTMLInputElement).value).toBe("Latein");
+
+    await user.click(screen.getAllByRole("button", { name: "Löschen" })[1]);
+    expect(screen.getAllByLabelText(/^Fach/)).toHaveLength(1);
+  });
+
+  it("hält Fotos lokal und zeigt ehrlich die manuelle Erfassung an", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const file = new File(["image"], "plan.jpg", { type: "image/jpeg" });
+
+    await user.upload(screen.getByLabelText(/Foto aufnehmen/), file);
+
+    expect(await screen.findByText(/automatische Fotoerkennung ist noch nicht freigegeben/i)).toBeTruthy();
+    expect(screen.getByAltText("Originalquelle plan.jpg")).toBeTruthy();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("bietet nach der Bestätigung die Übergabedatei als Fallback an", async () => {
+    const user = userEvent.setup();
+    const click = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => undefined);
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /Manuell beginnen/ }));
+    await user.selectOptions(screen.getByLabelText(/^Wochentag/), "FR");
+    fireEvent.change(screen.getByLabelText(/^Beginn/), { target: { value: "10:00" } });
+    fireEvent.change(screen.getByLabelText(/^Ende/), { target: { value: "10:45" } });
+    await user.type(screen.getByLabelText(/^Fach/), "Geschichte");
+    await user.click(screen.getByRole("button", { name: "Stundenplan bestätigen" }));
+    await user.click(screen.getByRole("button", { name: "Übergabedatei herunterladen" }));
+
+    expect(click).toHaveBeenCalledOnce();
+    expect(URL.createObjectURL).toHaveBeenCalledWith(expect.any(Blob));
+  });
+});
+
+let id = 0;
+function cryptoId() {
+  id += 1;
+  return `00000000-0000-4000-8000-${id.toString().padStart(12, "0")}`;
+}

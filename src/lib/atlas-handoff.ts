@@ -6,6 +6,12 @@ export const ATLAS_MESSAGE_TYPE = "mosaik.atlas-handoff.v1";
 
 type AtlasTarget = Pick<Window, "postMessage" | "closed">;
 
+type AtlasWindowEnvironment = {
+  open: (url: string, target: string) => AtlasTarget | null;
+  setInterval: (callback: () => void, delay: number) => number;
+  clearInterval: (id: number) => void;
+};
+
 export function atlasMessage(handoff: AtlasHandoff) {
   return {
     type: ATLAS_MESSAGE_TYPE,
@@ -19,6 +25,21 @@ export function sendToAtlas(target: AtlasTarget, handoff: AtlasHandoff): boolean
   return true;
 }
 
+export function openAtlasWithHandoff(
+  handoff: AtlasHandoff,
+  environment: AtlasWindowEnvironment = window,
+): boolean {
+  const target = environment.open(ATLAS_IMPORT_URL, "mosaik-atlas-import");
+  if (!target) return false;
+  let attempts = 0;
+  const timer = environment.setInterval(() => {
+    attempts += 1;
+    if (!sendToAtlas(target, handoff) || attempts >= 120) environment.clearInterval(timer);
+  }, 1000);
+  sendToAtlas(target, handoff);
+  return true;
+}
+
 export function downloadHandoff(handoff: AtlasHandoff): void {
   const safe = atlasHandoffSchema.parse(handoff);
   const blob = new Blob([JSON.stringify(safe, null, 2)], { type: "application/json" });
@@ -29,4 +50,3 @@ export function downloadHandoff(handoff: AtlasHandoff): void {
   link.click();
   URL.revokeObjectURL(url);
 }
-

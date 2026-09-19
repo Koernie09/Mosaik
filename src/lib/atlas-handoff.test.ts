@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { createAtlasHandoff } from "../domain/personal-schedule";
 import type { PersonalSchedule } from "../domain/personal-schedule";
-import { ATLAS_MESSAGE_TYPE, ATLAS_ORIGIN, sendToAtlas } from "./atlas-handoff";
+import { ATLAS_IMPORT_URL, ATLAS_MESSAGE_TYPE, ATLAS_ORIGIN, openAtlasWithHandoff, sendToAtlas } from "./atlas-handoff";
 
 const schedule: PersonalSchedule = {
   schema: "mosaik.personal-schedule.v1",
@@ -34,5 +34,30 @@ describe("ATLAS-Browserübergabe", () => {
     expect(sendToAtlas({ postMessage, closed: true }, createAtlasHandoff(schedule))).toBe(false);
     expect(postMessage).not.toHaveBeenCalled();
   });
-});
 
+  it("öffnet ATLAS und wiederholt die Übergabe für die Ladephase", () => {
+    const postMessage = vi.fn();
+    const setInterval = vi.fn(() => 17);
+    const opened = openAtlasWithHandoff(createAtlasHandoff(schedule), {
+      open: vi.fn((url, target) => {
+        expect(url).toBe(ATLAS_IMPORT_URL);
+        expect(target).toBe("mosaik-atlas-import");
+        return { postMessage, closed: false };
+      }),
+      setInterval,
+      clearInterval: vi.fn(),
+    });
+
+    expect(opened).toBe(true);
+    expect(postMessage).toHaveBeenCalledOnce();
+    expect(setInterval).toHaveBeenCalledWith(expect.any(Function), 1000);
+  });
+
+  it("meldet einen blockierten Pop-up-Start", () => {
+    expect(openAtlasWithHandoff(createAtlasHandoff(schedule), {
+      open: vi.fn(() => null),
+      setInterval: vi.fn(() => 1),
+      clearInterval: vi.fn(),
+    })).toBe(false);
+  });
+});
