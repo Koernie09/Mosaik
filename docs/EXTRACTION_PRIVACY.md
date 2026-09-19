@@ -15,6 +15,17 @@
 4. **Bestätigung:** Erst jetzt entsteht der bereinigte Stundenplan. An ATLAS
    gehen ausschließlich die im Handoff-Vertrag genannten Tatsachen.
 
+## Im technischen Kern umgesetzt
+
+- Text-, CSV-, TSV- und kopierte Tabelleneingaben werden lokal normalisiert.
+- PDFs mit Textebene werden mit `pdfjs-dist` vollständig im Browser gelesen;
+  Dateigröße (15 MB) und Seitenzahl (20) sind begrenzt.
+- Bilddateien werden weder hochgeladen noch automatisch analysiert. Sie öffnen
+  einen manuellen Entwurf mit einem klaren Hinweis.
+- Für lokale OCR existiert bewusst noch keine Implementierung. Vor der Auswahl
+  einer OCR-Bibliothek werden Modellbezug, Paketgröße, Geräteperformance und
+  Barrierefreiheit geprüft. Eine externe OCR bleibt gesperrt.
+
 ## Externe Erkennung: Freigabesperre
 
 Eine Übertragung von Foto, Scan, PDF oder daraus gewonnenem Text an einen

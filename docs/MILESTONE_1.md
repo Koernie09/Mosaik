@@ -8,7 +8,8 @@
 
 ## Der vollständige, bewusst kleine Weg
 
-1. **Importieren:** ein Bild oder ein PDF eines persönlichen Wochenplans auswählen.
+1. **Importieren:** ein Bild oder PDF auswählen, Text/Tabelle einfügen oder
+   manuell mit einem leeren Plan beginnen.
 2. **Extrahieren:** daraus entsteht ein Entwurf; noch nichts gilt als verlässlich.
 3. **Prüfen:** Wochenraster und Quelle werden gemeinsam angezeigt. Jede Zelle ist
    änderbar, unsichere Felder sind markiert.
@@ -22,7 +23,8 @@
 - allgemeine Dokumentenablage oder Schulmodellierung
 - Vertretungspläne, Klassenlisten oder KOMPASS-Anbindung
 - mehrere Lehrkräfte in einem Import
-- universelle Dokumenterkennung oder große Aktenstapel
+- universelle Dokumenterkennung oder große Aktenstapel; Bild-OCR folgt erst nach
+  einer ausdrücklich freigegebenen lokalen Lösung
 - automatische Synchronisation
 - Zuordnung zu ATLAS-Arbeitszeitkategorien
 

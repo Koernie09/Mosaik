@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
+    "pdfjs-dist": "^5.4.149",
     "react": "latest",
     "react-dom": "latest",
     "zod": "^3.24.2"

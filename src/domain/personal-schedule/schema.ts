@@ -12,7 +12,7 @@ const trimmedText = z.string().trim().min(1);
 export const weekdaySchema = z.enum(["MO", "DI", "MI", "DO", "FR", "SA", "SO"]);
 
 export const sourceSchema = z.object({
-  type: z.enum(["image", "pdf"]),
+  type: z.enum(["image", "pdf", "text", "table", "manual"]),
   fileName: trimmedText.optional(),
   importedAt: z.string().datetime(),
 });

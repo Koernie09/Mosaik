@@ -43,7 +43,7 @@ im Browserverlauf noch in Referrer- oder Zugriffsprotokollen als URL erscheinen.
 
 - Eingangsschema validieren und unbekannte Versionen verständlich ablehnen.
 - Gültigkeitszeitraum ergänzen lassen, wenn MOSAIK keinen erkannt hat.
-- Vorhandenen Stundenplan erkennen und Ersetzen/Ergänzen ausdrücklich abfragen.
+- Vorhandenen Stundenplan erkennen und das Ersetzen ausdrücklich bestätigen lassen.
 - Fach, Lerngruppe, Raum und Zeiten vor dem Speichern noch einmal anzeigen.
 - Erst nach Bestätigung ATLAS-eigene Serien oder Kalenderereignisse erzeugen.
 - Keine Rohdatei und keine Extraktions-Konfidenzen übernehmen.
@@ -53,7 +53,9 @@ im Browserverlauf noch in Referrer- oder Zugriffsprotokollen als URL erscheinen.
 - Höchstens 200 Wochenstunden und höchstens zwei Jahre Gültigkeit.
 - ATLAS erzeugt konkrete Termine nur innerhalb des bestätigten Zeitraums.
 - Ein vorhandener ATLAS-Stundenplan wird nie still überschrieben. Die Person
-  wählt ausdrücklich „ersetzen“ oder „ergänzen“.
+  bestätigt das Ersetzen ausdrücklich. Ein späteres „Ergänzen“ benötigt ein
+  echtes Schichtenmodell für synchronisierte und importierte Quellen und gehört
+  deshalb nicht zum ersten Meilenstein.
 - Beim Ersetzen bleiben bereits bestätigte Arbeitszeiten erhalten. Nur noch
   nicht bestätigte Termine der bisherigen Stundenplanquelle werden ersetzt.
 - Unbekannte Schema-Versionen und zusätzliche Felder werden abgelehnt.

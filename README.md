@@ -8,8 +8,10 @@ später auch viele gescannte Seiten. Jedes Informationsstück kann sofort nützl
 sein – und zugleich das Modell der Schule vervollständigen.
 
 Der erste Meilenstein ist absichtlich kleiner: den persönlichen Wochenstundenplan
-einer Lehrkraft aus einem Bild oder PDF erkennen, gemeinsam prüfen und als
-bestätigte Information an ATLAS übergeben.
+einer Lehrkraft aus PDF-Text, kopierter Tabelle, Text oder manueller Eingabe in
+einen gemeinsamen Entwurf überführen, gemeinsam prüfen und als bestätigte
+Information an ATLAS übergeben. Bilder bleiben lokal; eine lokale OCR wird erst
+nach gesonderter technischer Prüfung ergänzt.
 
 ## Technischer Stand
 
