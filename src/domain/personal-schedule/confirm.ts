@@ -22,6 +22,17 @@ type ConfirmationOptions = {
   exportedAt?: string;
 };
 
+const fieldNames: Record<string, string> = {
+  weekday: "Wochentag",
+  startTime: "Beginn",
+  endTime: "Ende",
+  period: "Stunde",
+  subject: "Fach",
+  classOrCourse: "Lerngruppe oder Klasse",
+  room: "Raum",
+  timezone: "Zeitzone",
+};
+
 export function confirmScheduleDraft(
   input: PersonalScheduleDraft,
   options: ConfirmationOptions = {},
@@ -34,17 +45,35 @@ export function confirmScheduleDraft(
     owner: draft.owner,
     validity: draft.validity,
     timezone: draft.timezone,
-    lessons: draft.lessons
-      .map(({ confidence: _confidence, evidence: _evidence, warnings: _warnings, ...lesson }) => lesson),
+    lessons: draft.lessons.map(({
+      confidence: _confidence,
+      evidence: _evidence,
+      warnings: _warnings,
+      period,
+      classOrCourse,
+      room,
+      ...lesson
+    }) => ({
+      ...lesson,
+      ...(period == null ? {} : { period }),
+      ...(classOrCourse == null ? {} : { classOrCourse }),
+      ...(room == null ? {} : { room }),
+    })),
     source: draft.source,
   });
 
   if (!candidate.success) {
     throw new ScheduleConfirmationError(
-      candidate.error.issues.map((issue) => ({
-        code: "INCOMPLETE_OR_INVALID_FIELD",
-        message: `Bitte prüfen: ${issue.path.join(".")} – ${issue.message}`,
-      })),
+      candidate.error.issues.map((issue) => {
+        const lessonIndex = issue.path[0] === "lessons" && typeof issue.path[1] === "number"
+          ? issue.path[1]
+          : undefined;
+        return {
+          code: "INCOMPLETE_OR_INVALID_FIELD",
+          message: `${fieldNames[String(issue.path.at(-1))] ?? "Angabe"}: Bitte ergänzen oder korrigieren.`,
+          lessonIds: lessonIndex === undefined ? undefined : [draft.lessons[lessonIndex].id],
+        };
+      }),
     );
   }
 

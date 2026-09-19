@@ -38,5 +38,33 @@ describe("Stundenplan aus Text oder Tabelle", () => {
     expect(draft.lessons).toHaveLength(1);
     expect(draft.lessons[0].subject).toBeNull();
   });
-});
 
+  it("erkennt eine UNTIS-Unterrichtsverteilung als unplatzierte Wochenstunden", () => {
+    const result = extractScheduleFromText([
+      "BEISPIEL-GYMNASIUM\tSchuljahr 2024/2025\tUntis 2025",
+      "Xx\tBeispielname",
+      "Wst\tFach\tLehrer\tKlasse(n)\tVon\tBis\tText\tWert",
+      "3\tDe2\tXx\t13\t3.2.\t8.6.\tL 9\t1.14",
+      "4\tD\tXx\t8A\t3.2.\t1.90",
+      "2\tWuN\tXx\t9A,9B\t3.2.\t0.95",
+      "2\tWuN\tXx\t10A,10B\t3.2.\t0.95",
+      "2\tDe2\tXx\t11A,11B,11C\t3.2.\tL 11\t0.95",
+      "Anrechnungen",
+      "5079\tXx\tSL\t11.00\t3.2.2025\tStändige Vertretung",
+    ].join("\n"), { sourceType: "pdf" });
+
+    expect(result.draft.lessons).toHaveLength(13);
+    expect(result.draft.lessons.filter((lesson) => lesson.subject === "D")).toHaveLength(4);
+    expect(result.draft.lessons[0]).toEqual(expect.objectContaining({
+      weekday: null,
+      startTime: null,
+      endTime: null,
+      subject: "De2",
+      classOrCourse: "13",
+    }));
+    expect(result.warnings).toEqual([
+      expect.objectContaining({ code: "TEACHING_ASSIGNMENT_WITHOUT_TIMES" }),
+    ]);
+    expect(result.recognizedLines).toBe(6);
+  });
+});

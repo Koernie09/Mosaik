@@ -6,7 +6,12 @@ export type ExtractionWarning = {
     | "UNRECOGNIZED_LINE"
     | "IMAGE_OCR_NOT_AVAILABLE"
     | "PDF_WITHOUT_TEXT"
-    | "TOO_MANY_PAGES";
+    | "TOO_MANY_PAGES"
+    | "TEACHING_ASSIGNMENT_WITHOUT_TIMES"
+    | "HTML_PERIOD_TIMES_MISSING"
+    | "HTML_NO_TIMETABLE"
+    | "WEBUNTIS_SCREENSHOT_RECOGNIZED"
+    | "WEBUNTIS_UNCLEAR_ENTRIES";
   message: string;
   line?: number;
 };
@@ -16,7 +21,7 @@ export type ExtractionResult = {
   warnings: ExtractionWarning[];
   recognizedLines: number;
   ignoredLines: number;
+  sourceText?: string;
 };
 
 export type TextSourceType = "text" | "table" | "pdf";
-

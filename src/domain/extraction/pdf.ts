@@ -19,10 +19,12 @@ function linesFromItems(items: PositionedText[]): string[] {
 export async function extractScheduleFromPdf(file: File): Promise<ExtractionResult> {
   if (file.size > MAX_PDF_BYTES) throw new Error("Die PDF-Datei darf höchstens 15 MB groß sein.");
   const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
-    import.meta.url,
-  ).toString();
+  if (typeof window !== "undefined") {
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+      "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
+      import.meta.url,
+    ).toString();
+  }
   const document = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()), isEvalSupported: false }).promise;
   if (document.numPages > MAX_PAGES) throw new Error(`Die PDF-Datei darf höchstens ${MAX_PAGES} Seiten enthalten.`);
   const lines: string[] = [];
@@ -39,9 +41,8 @@ export async function extractScheduleFromPdf(file: File): Promise<ExtractionResu
   if (lines.length === 0) {
     result.warnings.push({
       code: "PDF_WITHOUT_TEXT",
-      message: "Diese PDF enthält keine lesbare Textebene. Bitte die lokale Bilderkennung oder die manuelle Eingabe verwenden.",
+      message: "Diese PDF enthält keine lesbare Textebene. Die automatische Bilderkennung ist noch nicht freigegeben; bitte die Stunden manuell ergänzen.",
     });
   }
   return result;
 }
-
