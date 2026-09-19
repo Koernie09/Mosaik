@@ -94,6 +94,7 @@ export function ReviewStep({ draft, issues, preview, warnings, onBack, onChange,
 
   function renderLesson(lesson: DraftLesson, index: number) {
     const relevantIssues = lessonIssues(lesson.id);
+    const needsPlacement = lesson.weekday === null || lesson.startTime === null || lesson.endTime === null;
     return (
       <article className={`lesson-card ${relevantIssues.length ? "has-error" : ""}`} key={lesson.id}>
         <div className="lesson-title">
@@ -124,6 +125,9 @@ export function ReviewStep({ draft, issues, preview, warnings, onBack, onChange,
           <Field label="Lerngruppe / Klasse" lesson={lesson} field="classOrCourse" onChange={updateLesson} />
           <Field label="Raum" lesson={lesson} field="room" onChange={updateLesson} />
         </div>
+        {needsPlacement && lesson.subject ? (
+          <p className="placement-note">Aus einer Unterrichtsverteilung übernommen: Bitte Wochentag, Beginn und Ende ergänzen.</p>
+        ) : null}
         {relevantIssues.map((issue) => <p className="field-error" key={`${issue.code}-${issue.message}`}>{issue.message}</p>)}
       </article>
     );
@@ -155,7 +159,7 @@ export function ReviewStep({ draft, issues, preview, warnings, onBack, onChange,
 
       {unassigned.length > 0 ? (
         <section className="day-column unassigned" aria-labelledby="unassigned-title">
-          <h3 id="unassigned-title">Noch zuordnen</h3>
+          <h3 id="unassigned-title">Noch zuordnen ({unassigned.length})</h3>
           {unassigned.map(renderLesson)}
           <button className="secondary add-button" type="button" onClick={() => addLesson(null)}>Weitere Stunde ergänzen</button>
         </section>

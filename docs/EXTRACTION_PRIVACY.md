@@ -20,6 +20,10 @@
 - Text-, CSV-, TSV- und kopierte Tabelleneingaben werden lokal normalisiert.
 - PDFs mit Textebene werden mit `pdfjs-dist` vollständig im Browser gelesen;
   Dateigröße (15 MB) und Seitenzahl (20) sind begrenzt.
+- UNTIS-Unterrichtsverteilungen werden als Teilinformation erkannt: Fach,
+  Lerngruppe und Wochenstundenzahl erzeugen unplatzierte Unterrichtsstunden.
+  Wochentag und Uhrzeit werden niemals erfunden, sondern müssen vor der
+  Bestätigung aus einem Wochenplan ergänzt werden.
 - Bilddateien werden weder hochgeladen noch automatisch analysiert. Sie öffnen
   einen manuellen Entwurf mit einem klaren Hinweis.
 - Für lokale OCR existiert bewusst noch keine Implementierung. Vor der Auswahl

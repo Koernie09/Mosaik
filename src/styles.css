@@ -90,6 +90,7 @@ label > span { color: var(--danger); }
 .empty-day { margin: .5rem 0 1rem; color: var(--muted); font-size: .9rem; }
 .add-button { width: 100%; margin-top: .6rem; }
 .field-error { margin: .65rem 0 0; color: var(--danger); font-size: .87rem; font-weight: 700; line-height: 1.4; }
+.placement-note { margin: .65rem 0 0; padding: .55rem .65rem; border-radius: .55rem; background: #fff8ed; color: #684b2c; font-size: .82rem; font-weight: 650; line-height: 1.4; }
 .global-error { padding: .75rem; border-radius: .65rem; background: var(--danger-light); }
 .form-actions, .handoff-actions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .75rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e8e1ea; }
 

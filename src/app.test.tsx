@@ -60,6 +60,20 @@ describe("MOSAIK-Stundenplanablauf", () => {
     expect(screen.getAllByLabelText(/^Fach/)).toHaveLength(1);
   });
 
+  it("zeigt eine Unterrichtsverteilung als unplatzierte Stunden statt als Fehlerliste", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.type(
+      screen.getByLabelText("Text oder kopierte Tabelle einfügen"),
+      "Wst;Fach;Lehrer;Klasse(n);Von;Bis;Text;Wert{enter}3;De2;Xx;13;3.2.;8.6.;L 9;1.14",
+    );
+    await user.click(screen.getByRole("button", { name: "Text lokal auswerten" }));
+
+    expect(screen.getByRole("heading", { name: "Noch zuordnen (3)" })).toBeTruthy();
+    expect(screen.getByText(/Unterrichtsverteilung erkannt: 1 Zuordnungen mit insgesamt 3 Wochenstunden/)).toBeTruthy();
+    expect(screen.queryByText(/Zeile 1 wurde nicht erkannt/)).toBeNull();
+  });
+
   it("hält Fotos lokal und zeigt ehrlich die manuelle Erfassung an", async () => {
     const user = userEvent.setup();
     render(<App />);

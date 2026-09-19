@@ -6,7 +6,8 @@ export type ExtractionWarning = {
     | "UNRECOGNIZED_LINE"
     | "IMAGE_OCR_NOT_AVAILABLE"
     | "PDF_WITHOUT_TEXT"
-    | "TOO_MANY_PAGES";
+    | "TOO_MANY_PAGES"
+    | "TEACHING_ASSIGNMENT_WITHOUT_TIMES";
   message: string;
   line?: number;
 };
@@ -19,4 +20,3 @@ export type ExtractionResult = {
 };
 
 export type TextSourceType = "text" | "table" | "pdf";
-

@@ -25,6 +25,11 @@ Prüfung und die bestätigte Übergabe an ATLAS. Foto- und Scanquellen bleiben l
 solange keine ausdrücklich freigegebene lokale Erkennung vorliegt, führt MOSAIK
 ehrlich zur manuellen Erfassung.
 
+Neben Wochenrastern erkennt der lokale Parser UNTIS-Unterrichtsverteilungen mit
+Fach, Lerngruppe und Wochenstundenzahl. Da diese Listen keine Wochentage und
+Uhrzeiten enthalten, erzeugt MOSAIK daraus bewusst unplatzierte Stunden, die vor
+der Bestätigung zeitlich ergänzt werden müssen.
+
 ## Lokal starten
 
 ```bash

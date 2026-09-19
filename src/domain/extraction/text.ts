@@ -132,6 +132,59 @@ function parseGrid(lines: string[], alreadyUsed: Set<number>): { lessons: DraftL
   return { lessons, used };
 }
 
+function parseTeachingAssignment(
+  lines: string[],
+  alreadyUsed: Set<number>,
+): { lessons: DraftLesson[]; used: Set<number>; rows: number } {
+  const lessons: DraftLesson[] = [];
+  const used = new Set<number>();
+  const headerIndex = lines.findIndex((line, index) => {
+    if (alreadyUsed.has(index)) return false;
+    const normalized = columns(line).map((part) => part.toLocaleLowerCase("de-DE"));
+    return normalized.includes("wst") && normalized.includes("fach") &&
+      normalized.includes("lehrer") && normalized.some((part) => part.startsWith("klasse"));
+  });
+  if (headerIndex < 0) return { lessons, used, rows: 0 };
+
+  used.add(headerIndex);
+  let rows = 0;
+  for (let index = headerIndex + 1; index < lines.length; index += 1) {
+    if (/^anrechnungen\b/i.test(lines[index])) break;
+    const parts = columns(lines[index]);
+    const weeklyLessons = Number(parts[0]?.replace(",", "."));
+    const subject = parts[1]?.trim();
+    const classOrCourse = parts[3]?.trim();
+    if (!Number.isInteger(weeklyLessons) || weeklyLessons < 1 || weeklyLessons > 20 || !subject || !classOrCourse) {
+      continue;
+    }
+
+    rows += 1;
+    used.add(index);
+    for (let slot = 0; slot < weeklyLessons; slot += 1) {
+      lessons.push({
+        id: crypto.randomUUID(),
+        weekday: null,
+        startTime: null,
+        endTime: null,
+        subject,
+        classOrCourse,
+        room: null,
+        confidence: {
+          overall: 0.84,
+          fields: { subject: 0.9, classOrCourse: 0.9 },
+        },
+        evidence: { page: 1, rawText: lines[index] },
+        warnings: [
+          { field: "weekday", code: "missing-weekday", message: "Wochentag aus dem Wochenplan ergänzen." },
+          { field: "startTime", code: "missing-start-time", message: "Beginn aus dem Wochenplan ergänzen." },
+          { field: "endTime", code: "missing-end-time", message: "Ende aus dem Wochenplan ergänzen." },
+        ],
+      });
+    }
+  }
+  return { lessons, used, rows };
+}
+
 function source(type: TextSourceType, fileName?: string) {
   return { type, fileName, importedAt: new Date().toISOString() } as const;
 }
@@ -143,15 +196,29 @@ export function extractScheduleFromText(
   const lines = text.replace(/\r/g, "").split("\n").map((line) => line.trim()).filter(Boolean);
   const rowResult = parseRows(lines);
   const gridResult = parseGrid(lines, rowResult.used);
-  const lessons = [...rowResult.lessons, ...gridResult.lessons];
-  const used = new Set([...rowResult.used, ...gridResult.used]);
+  const initiallyUsed = new Set([...rowResult.used, ...gridResult.used]);
+  const assignmentResult = parseTeachingAssignment(lines, initiallyUsed);
+  const lessons = [...rowResult.lessons, ...gridResult.lessons, ...assignmentResult.lessons];
+  const used = new Set([...initiallyUsed, ...assignmentResult.used]);
   const warnings: ExtractionWarning[] = [];
   if (lines.length === 0) warnings.push({ code: "EMPTY_SOURCE", message: "Die Eingabe enthält keinen Text." });
-  lines.forEach((line, index) => {
-    if (!used.has(index) && !columns(line).some((part) => weekdayOf(part))) {
+  if (assignmentResult.rows > 0) {
+    warnings.push({
+      code: "TEACHING_ASSIGNMENT_WITHOUT_TIMES",
+      message: `Unterrichtsverteilung erkannt: ${assignmentResult.rows} Zuordnungen mit insgesamt ${assignmentResult.lessons.length} Wochenstunden. Das Dokument enthält keine Wochentage oder Uhrzeiten; bitte ergänze sie aus Deinem Wochenplan.`,
+    });
+  }
+  const ignored = lines.map((line, index) => ({ line, index })).filter(({ line, index }) =>
+    !used.has(index) && !columns(line).some((part) => weekdayOf(part)),
+  );
+  if (lessons.length === 0) {
+    ignored.slice(0, 3).forEach(({ line, index }) => {
       warnings.push({ code: "UNRECOGNIZED_LINE", message: `Zeile ${index + 1} wurde nicht erkannt: ${line}`, line: index + 1 });
+    });
+    if (ignored.length > 3) {
+      warnings.push({ code: "UNRECOGNIZED_LINE", message: `${ignored.length - 3} weitere Zeilen konnten nicht als Unterricht eingeordnet werden.` });
     }
-  });
+  }
 
   const draft: PersonalScheduleDraft = {
     schema: PERSONAL_SCHEDULE_DRAFT_SCHEMA,
